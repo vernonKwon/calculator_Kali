@@ -8,8 +8,6 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <!---< hello world >-->
-
     <RelativeLayout
         android:id="@+id/linear_Show_Number"
         android:layout_width="match_parent"
@@ -27,7 +25,8 @@
             android:maxLines="1"
             android:padding="20dp"
             android:textSize="30dp"
-            android:id="@+id/textview_showNumber"/>
+            android:id="@+id/textview_showNumber"
+            android:text="0"/>
 
     </RelativeLayout>
 
