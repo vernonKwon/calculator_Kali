@@ -1,22 +1,26 @@
 package kr.co.inmagic.calculator
 
+import android.app.ActionBar
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutCompat
 import android.util.DisplayMetrics
+import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
+    // github upadata 5
 
     var the_four_fundamental_arithmetic_operations_status = 0 // 1 : plus, 2 : minus, 3 : multyply, 4 : division
-    var isDot = false
-    var isDeleteOk = false
-
-    //var isSelected = false
-    var selectOrder = 1
+    var isEquals = false
 
     var accumulation: Double = 0.0 // 누산 변수
 
@@ -32,9 +36,6 @@ class MainActivity : AppCompatActivity() {
     var width = 0 //lazy { parentView.measuredWidth }
     var height = 0 //lazy { parentView.measuredHeight }
 
-    var temp_number: Double = 0.0
-    var sec_number: Double = 0.0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         val a: Int
         a = displayMetrics.widthPixels / 6
 
-        Toast.makeText(applicationContext, height.toString(), Toast.LENGTH_SHORT).show() // 해상도 세로값 출력 for debug
+        Toast.makeText(applicationContext, height.toString(), Toast.LENGTH_SHORT).show() // 해상도 세로값 출력
 
         numberpad.layoutParams = LinearLayout.LayoutParams(width, numberPadHeight)
 
@@ -56,33 +57,9 @@ class MainActivity : AppCompatActivity() {
             button_Number[i] = findViewById(resNumberId[i])
 
             button_Number[i]!!.setOnClickListener {
-
-                if (isDeleteOk) {
-                    textview_showNumber.text = ""
-                    isDeleteOk = false
-                }
-                if (textview_showNumber.text == "0") {
-                    textview_showNumber.text = i.toString()
-                } else {
-                    textview_showNumber.text = (textview_showNumber.text.toString() + i)
-                    sec_number = textview_showNumber.text.toString().toDouble()
-                }
-
-                /*when(selectOrder) {
-                    1 -> {
-                        selectOrder = 2
-                    }
-                    2 -> {
-
-                        selectOrder = 1
-                    }
-                }*/
-//                accumulation = textview_showNumber.text.toString().toDouble()
-
-                //Toast.makeText(applicationContext, i.toString(), Toast.LENGTH_SHORT).show()
-
+                Toast.makeText(applicationContext, i.toString(), Toast.LENGTH_SHORT).show()
+                textview_showNumber.text = (textview_showNumber.text.toString() + i)
             }
-
             button_Number[i]!!.layoutParams.width = a
             button_Number[i]!!.layoutParams.height = a
             button_Number[i]!!.setPadding(20, 20, 20, 20)
@@ -91,110 +68,33 @@ class MainActivity : AppCompatActivity() {
         }
         button_Number[0]!!.background = ContextCompat.getDrawable(this, R.drawable.zero_button)
 
-        for (i in 0 until resFunctionId.size) { // 9개
+        for (i in 0 until resFunctionId.size) {
             button_Function[i] = findViewById(resFunctionId[i])
         }
+        accumulation = 0.0
+
 
         // 값 초기화 ,AC
         button_Function[0]!!.setOnClickListener {
             accumulation = 0.0
             textview_showNumber.text = "0"
-            isDot = false
-            selectOrder = 1
         }
 
         // +/-
         button_Function[1]!!.setOnClickListener {
 
             listener_negative_number()
-
         }
-        // percent
+
         button_Function[2]!!.setOnClickListener {
             listener_percent()
-
         }
 
-        // division
         button_Function[3]!!.setOnClickListener {
-            temp_number = accumulation
-            the_four_fundamental_arithmetic_operations_status = 4
-            isDeleteOk = true
-            isDot = false
-            // button_Function[3]!!.setBackgroundColor() // 색깔 변경 (눌려있는 상태)
+            // 나누기
 
         }
 
-        //multyfly
-        button_Function[4]!!.setOnClickListener {
-            temp_number = accumulation
-            the_four_fundamental_arithmetic_operations_status = 3
-            isDeleteOk = true
-            isDot = false
-        }
-
-        //minus
-        button_Function[5]!!.setOnClickListener {
-            temp_number = accumulation
-            the_four_fundamental_arithmetic_operations_status = 2
-            isDeleteOk = true
-            isDot = false
-        }
-
-        //plus
-        button_Function[6]!!.setOnClickListener {
-            temp_number = accumulation
-            the_four_fundamental_arithmetic_operations_status = 1
-            isDeleteOk = true
-            isDot = false
-        }
-
-        // equal
-        button_Function[7]!!.setOnClickListener {
-            sec_number = textview_showNumber.text.toString().toDouble()
-
-            when (the_four_fundamental_arithmetic_operations_status) {
-
-                1 -> {
-                    accumulation = (temp_number + textview_showNumber.text.toString().toDouble())
-                    textview_showNumber.text = accumulation.toString()
-                    isDeleteOk = false
-                }
-
-                2 -> {
-                    accumulation = (temp_number - textview_showNumber.text.toString().toDouble())
-                    textview_showNumber.text = accumulation.toString()
-                    isDeleteOk = false
-                }
-
-                3 -> {
-                    accumulation = (temp_number * textview_showNumber.text.toString().toDouble())
-                    textview_showNumber.text = accumulation.toString()
-                    isDeleteOk = false
-                }
-
-                4 -> {
-                    accumulation = (temp_number / textview_showNumber.text.toString().toDouble())
-                    textview_showNumber.text = accumulation.toString()
-                    isDeleteOk = false
-                    // button_Function[3]!!.setBackgroundColor() // 색깔 변경 (안눌려 있는 상태)
-                }
-            }
-
-        }
-
-        button_Function[8]!!.setOnClickListener {
-
-            if (isDot) { // .이 존재하지 않음
-
-            } else { // .이 존재함 추후 소수점 이후 자리는 없애버리는 기능 추가 / 기존 아이폰엔 없음
-                textview_showNumber.text = (textview_showNumber.text.toString() + ".")
-                accumulation = textview_showNumber.text.toString().toDouble()
-                isDot = true
-            }
-
-
-        }
 
     }
 
@@ -230,6 +130,4 @@ class MainActivity : AppCompatActivity() {
     private fun setAccumulation(number: String) {
         accumulation = number.toDouble()
     }
-
-
 }
