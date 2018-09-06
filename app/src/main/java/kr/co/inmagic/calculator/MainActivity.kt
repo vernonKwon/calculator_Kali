@@ -14,8 +14,8 @@ class MainActivity : AppCompatActivity() {
     var the_four_fundamental_arithmetic_operations_status = 0 // 1 : plus, 2 : minus, 3 : multyply, 4 : division
     var isDot = false
     var isDeleteOk = false
-    var isSelected = false
 
+    //var isSelected = false
     var selectOrder = 1
 
     var accumulation: Double = 0.0 // 누산 변수
@@ -65,20 +65,21 @@ class MainActivity : AppCompatActivity() {
                     textview_showNumber.text = i.toString()
                 } else {
                     textview_showNumber.text = (textview_showNumber.text.toString() + i)
+                    sec_number = textview_showNumber.text.toString().toDouble()
                 }
-                when(selectOrder) {
+
+                /*when(selectOrder) {
                     1 -> {
                         selectOrder = 2
                     }
                     2 -> {
-                        sec_number = textview_showNumber.text.toString().toDouble()
+
                         selectOrder = 1
                     }
-                }
-                accumulation = textview_showNumber.text.toString().toDouble()
-                isSelected = true
+                }*/
+//                accumulation = textview_showNumber.text.toString().toDouble()
 
-                Toast.makeText(applicationContext, i.toString(), Toast.LENGTH_SHORT).show()
+                //Toast.makeText(applicationContext, i.toString(), Toast.LENGTH_SHORT).show()
 
             }
 
@@ -100,19 +101,18 @@ class MainActivity : AppCompatActivity() {
             textview_showNumber.text = "0"
             isDot = false
             selectOrder = 1
-            isSelected = false
         }
 
         // +/-
         button_Function[1]!!.setOnClickListener {
 
             listener_negative_number()
-            isSelected = false
+
         }
         // percent
         button_Function[2]!!.setOnClickListener {
             listener_percent()
-            isSelected = false
+
         }
 
         // division
@@ -121,7 +121,6 @@ class MainActivity : AppCompatActivity() {
             the_four_fundamental_arithmetic_operations_status = 4
             isDeleteOk = true
             isDot = false
-            isSelected = false
             // button_Function[3]!!.setBackgroundColor() // 색깔 변경 (눌려있는 상태)
 
         }
@@ -132,7 +131,6 @@ class MainActivity : AppCompatActivity() {
             the_four_fundamental_arithmetic_operations_status = 3
             isDeleteOk = true
             isDot = false
-            isSelected = false
         }
 
         //minus
@@ -141,7 +139,6 @@ class MainActivity : AppCompatActivity() {
             the_four_fundamental_arithmetic_operations_status = 2
             isDeleteOk = true
             isDot = false
-            isSelected = false
         }
 
         //plus
@@ -150,15 +147,11 @@ class MainActivity : AppCompatActivity() {
             the_four_fundamental_arithmetic_operations_status = 1
             isDeleteOk = true
             isDot = false
-            isSelected = false
         }
 
         // equal
         button_Function[7]!!.setOnClickListener {
-
-            if(!isSelected) {
-                temp_number = sec_number
-            }
+            sec_number = textview_showNumber.text.toString().toDouble()
 
             when (the_four_fundamental_arithmetic_operations_status) {
 
@@ -187,11 +180,10 @@ class MainActivity : AppCompatActivity() {
                     // button_Function[3]!!.setBackgroundColor() // 색깔 변경 (안눌려 있는 상태)
                 }
             }
-            isSelected = false
+
         }
 
         button_Function[8]!!.setOnClickListener {
-
 
             if (isDot) { // .이 존재하지 않음
 
