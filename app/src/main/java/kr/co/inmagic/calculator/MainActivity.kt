@@ -1,11 +1,18 @@
 package kr.co.inmagic.calculator
 
+import android.app.ActionBar
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutCompat
 import android.util.DisplayMetrics
+import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -14,9 +21,6 @@ class MainActivity : AppCompatActivity() {
     var the_four_fundamental_arithmetic_operations_status = 0 // 1 : plus, 2 : minus, 3 : multyply, 4 : division
     var isDot = false
     var isDeleteOk = false
-    var isSelected = false
-
-    var selectOrder = 1
 
     var accumulation: Double = 0.0 // 누산 변수
 
@@ -33,7 +37,6 @@ class MainActivity : AppCompatActivity() {
     var height = 0 //lazy { parentView.measuredHeight }
 
     var temp_number: Double = 0.0
-    var sec_number: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,17 +69,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     textview_showNumber.text = (textview_showNumber.text.toString() + i)
                 }
-                when(selectOrder) {
-                    1 -> {
-                        selectOrder = 2
-                    }
-                    2 -> {
-                        sec_number = textview_showNumber.text.toString().toDouble()
-                        selectOrder = 1
-                    }
-                }
                 accumulation = textview_showNumber.text.toString().toDouble()
-                isSelected = true
 
                 Toast.makeText(applicationContext, i.toString(), Toast.LENGTH_SHORT).show()
 
@@ -99,20 +92,16 @@ class MainActivity : AppCompatActivity() {
             accumulation = 0.0
             textview_showNumber.text = "0"
             isDot = false
-            selectOrder = 1
-            isSelected = false
         }
 
         // +/-
         button_Function[1]!!.setOnClickListener {
 
             listener_negative_number()
-            isSelected = false
         }
         // percent
         button_Function[2]!!.setOnClickListener {
             listener_percent()
-            isSelected = false
         }
 
         // division
@@ -121,7 +110,6 @@ class MainActivity : AppCompatActivity() {
             the_four_fundamental_arithmetic_operations_status = 4
             isDeleteOk = true
             isDot = false
-            isSelected = false
             // button_Function[3]!!.setBackgroundColor() // 색깔 변경 (눌려있는 상태)
 
         }
@@ -132,7 +120,6 @@ class MainActivity : AppCompatActivity() {
             the_four_fundamental_arithmetic_operations_status = 3
             isDeleteOk = true
             isDot = false
-            isSelected = false
         }
 
         //minus
@@ -141,7 +128,6 @@ class MainActivity : AppCompatActivity() {
             the_four_fundamental_arithmetic_operations_status = 2
             isDeleteOk = true
             isDot = false
-            isSelected = false
         }
 
         //plus
@@ -150,15 +136,10 @@ class MainActivity : AppCompatActivity() {
             the_four_fundamental_arithmetic_operations_status = 1
             isDeleteOk = true
             isDot = false
-            isSelected = false
         }
 
         // equal
         button_Function[7]!!.setOnClickListener {
-
-            if(!isSelected) {
-                temp_number = sec_number
-            }
 
             when (the_four_fundamental_arithmetic_operations_status) {
 
@@ -186,8 +167,8 @@ class MainActivity : AppCompatActivity() {
                     isDeleteOk = false
                     // button_Function[3]!!.setBackgroundColor() // 색깔 변경 (안눌려 있는 상태)
                 }
+
             }
-            isSelected = false
         }
 
         button_Function[8]!!.setOnClickListener {
