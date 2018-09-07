@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.DisplayMetrics
+import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.Toast
@@ -15,7 +16,7 @@ class MainActivity : AppCompatActivity() {
     var isDot = false
     var isDeleteOk = false
 
-    //var isSelected = false
+    var isFirstPushed_equals_flag = false
     var selectOrder = 1
 
     var accumulation: Double = 0.0 // 누산 변수
@@ -32,7 +33,7 @@ class MainActivity : AppCompatActivity() {
     var width = 0 //lazy { parentView.measuredWidth }
     var height = 0 //lazy { parentView.measuredHeight }
 
-    var temp_number: Double = 0.0
+    var first_number: Double = 0.0
     var sec_number: Double = 0.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         val a: Int
         a = displayMetrics.widthPixels / 6
 
-        Toast.makeText(applicationContext, height.toString(), Toast.LENGTH_SHORT).show() // 해상도 세로값 출력 for debug
+//        Toast.makeText(applicationContext, height.toString(), Toast.LENGTH_SHORT).show() // 해상도 세로값 출력 for debug
 
         numberpad.layoutParams = LinearLayout.LayoutParams(width, numberPadHeight)
 
@@ -81,6 +82,9 @@ class MainActivity : AppCompatActivity() {
 
                 //Toast.makeText(applicationContext, i.toString(), Toast.LENGTH_SHORT).show()
 
+                Log.d("debug", "sec_number : " + sec_number.toString())
+                Log.d("debug", "textview_showNumber : " + textview_showNumber.text.toString())
+
             }
 
             button_Number[i]!!.layoutParams.width = a
@@ -101,86 +105,109 @@ class MainActivity : AppCompatActivity() {
             textview_showNumber.text = "0"
             isDot = false
             selectOrder = 1
+            isFirstPushed_equals_flag = false
         }
+
 
         // +/-
         button_Function[1]!!.setOnClickListener {
-
             listener_negative_number()
+            Log.d("debug", "accumulation : " + accumulation.toString())
 
         }
+
         // percent
         button_Function[2]!!.setOnClickListener {
             listener_percent()
-
+            Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
         // division
         button_Function[3]!!.setOnClickListener {
-            temp_number = accumulation
+            first_number = accumulation
             the_four_fundamental_arithmetic_operations_status = 4
             isDeleteOk = true
             isDot = false
             // button_Function[3]!!.setBackgroundColor() // 색깔 변경 (눌려있는 상태)
-
+            Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
         //multyfly
         button_Function[4]!!.setOnClickListener {
-            temp_number = accumulation
+            first_number = accumulation
             the_four_fundamental_arithmetic_operations_status = 3
             isDeleteOk = true
             isDot = false
+            Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
         //minus
         button_Function[5]!!.setOnClickListener {
-            temp_number = accumulation
+            first_number = accumulation
             the_four_fundamental_arithmetic_operations_status = 2
             isDeleteOk = true
             isDot = false
+            Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
         //plus
         button_Function[6]!!.setOnClickListener {
-            temp_number = accumulation
+            first_number = sec_number
             the_four_fundamental_arithmetic_operations_status = 1
             isDeleteOk = true
             isDot = false
+            isFirstPushed_equals_flag = true
+
+            Log.d("debug", "accumulation : " + accumulation.toString())
         }
+
 
         // equal
         button_Function[7]!!.setOnClickListener {
-            sec_number = textview_showNumber.text.toString().toDouble()
+            //sec_number = textview_showNumber.text.toString().toDouble()
 
             when (the_four_fundamental_arithmetic_operations_status) {
 
                 1 -> {
-                    accumulation = (temp_number + textview_showNumber.text.toString().toDouble())
-                    textview_showNumber.text = accumulation.toString()
+                    if (isFirstPushed_equals_flag) {
+                        accumulation = first_number + sec_number
+
+                        Log.d("debug", "isfirstpush_equals_flag : true")
+                        isFirstPushed_equals_flag = false
+                    } else {
+                        accumulation += sec_number
+
+                        Log.d("debug", "isfirstpush_equals_flag : false")
+                    }
                     isDeleteOk = false
+
+//                    Log.d("debug", "Click!")
                 }
 
                 2 -> {
-                    accumulation = (temp_number - textview_showNumber.text.toString().toDouble())
+                    accumulation = (first_number - textview_showNumber.text.toString().toDouble())
                     textview_showNumber.text = accumulation.toString()
                     isDeleteOk = false
                 }
 
                 3 -> {
-                    accumulation = (temp_number * textview_showNumber.text.toString().toDouble())
+                    accumulation = (first_number * textview_showNumber.text.toString().toDouble())
                     textview_showNumber.text = accumulation.toString()
                     isDeleteOk = false
                 }
 
                 4 -> {
-                    accumulation = (temp_number / textview_showNumber.text.toString().toDouble())
+                    accumulation = (first_number / textview_showNumber.text.toString().toDouble())
                     textview_showNumber.text = accumulation.toString()
                     isDeleteOk = false
                     // button_Function[3]!!.setBackgroundColor() // 색깔 변경 (안눌려 있는 상태)
                 }
             }
+            Log.d("debug", "accumulation : " + accumulation.toString())
+            Log.d("debug", "sec_number : " + sec_number.toString())
+            Log.d("debug", "first_number : " + first_number.toString())
 
+            textview_showNumber.text = accumulation.toString()
         }
 
         button_Function[8]!!.setOnClickListener {
