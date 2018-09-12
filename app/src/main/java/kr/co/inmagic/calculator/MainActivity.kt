@@ -1,5 +1,6 @@
 package kr.co.inmagic.calculator
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
@@ -7,7 +8,6 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -46,15 +46,13 @@ class MainActivity : AppCompatActivity() {
         height = displayMetrics.heightPixels
 
         val numberPadHeight = height / 10 * 6
-        val a: Int
-        a = displayMetrics.widthPixels / 6
-
-//        Toast.makeText(applicationContext, height.toString(), Toast.LENGTH_SHORT).show() // 해상도 세로값 출력 for debug
+        val a: Int = displayMetrics.widthPixels / 6
 
         numberpad.layoutParams = LinearLayout.LayoutParams(width, numberPadHeight)
 
         for (i in 0 until resNumberId.size) {
             button_Number[i] = findViewById(resNumberId[i])
+            button_Number[i]!!.background = resources.getDrawable(R.drawable.numberpad)
 
             button_Number[i]!!.setOnClickListener {
 
@@ -90,13 +88,25 @@ class MainActivity : AppCompatActivity() {
             button_Number[i]!!.layoutParams.width = a
             button_Number[i]!!.layoutParams.height = a
             button_Number[i]!!.setPadding(20, 20, 20, 20)
-            button_Number[i]!!.background = ContextCompat.getDrawable(this, R.drawable.round_button)
+            button_Number[i]!!.background = ContextCompat.getDrawable(this, R.drawable.numberpad)
+            button_Number[i]!!.setTextColor(Color.WHITE)
 
         }
-        button_Number[0]!!.background = ContextCompat.getDrawable(this, R.drawable.zero_button)
+        //button_Number[0]!!.background = ContextCompat.getDrawable(this, R.drawable.zero_button)
+
 
         for (i in 0 until resFunctionId.size) { // 9개
             button_Function[i] = findViewById(resFunctionId[i])
+        }
+
+        button_Function[8]!!.background = ContextCompat.getDrawable(this, R.drawable.numberpad)
+        button_Function[8]!!.setTextColor(Color.WHITE)
+        for (i in 0 until 3) {
+            button_Function[i]!!.background = ContextCompat.getDrawable(this, R.drawable.funpad)
+        }
+
+        for (i in 3 until 8) {
+            button_Function[i]!!.background = ContextCompat.getDrawable(this, R.drawable.four)
         }
 
         // 값 초기화 ,AC
@@ -113,7 +123,6 @@ class MainActivity : AppCompatActivity() {
         button_Function[1]!!.setOnClickListener {
             listener_negative_number()
             Log.d("debug", "accumulation : " + accumulation.toString())
-
         }
 
         // percent
@@ -122,13 +131,44 @@ class MainActivity : AppCompatActivity() {
             Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
-        // division
+        /**
+         *
+        button_Function[index]
+        division : 3 - 4
+        multyfly : 4 - 3
+        minus : 5 - 2
+        plus : 6 - 1
+         */
+
+        //사칙연산, 추후 사용
+/*
+
+        for (i in 3..6) {
+            Log.d("debug", "temp : " + temp.toString())
+            button_Function[i]!!.setOnClickListener {
+                first_number = accumulation
+                the_four_fundamental_arithmetic_operations_status = (i-2)
+                isDeleteOk = true
+                isDot = false
+                isFirstPushed_equals_flag = true
+
+                Log.d("debug", "accumulation : " + accumulation.toString())
+                Log.d("debug", "사칙연산 상태 : " + the_four_fundamental_arithmetic_operations_status.toString())
+                Log.d("debug", "temp : " + temp.toString())
+            }
+            temp--
+        }
+*/
+
+
+        //division
         button_Function[3]!!.setOnClickListener {
             first_number = accumulation
             the_four_fundamental_arithmetic_operations_status = 4
             isDeleteOk = true
             isDot = false
-            // button_Function[3]!!.setBackgroundColor() // 색깔 변경 (눌려있는 상태)
+            isFirstPushed_equals_flag = true
+
             Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
@@ -138,6 +178,7 @@ class MainActivity : AppCompatActivity() {
             the_four_fundamental_arithmetic_operations_status = 3
             isDeleteOk = true
             isDot = false
+            isFirstPushed_equals_flag = true
             Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
@@ -147,8 +188,10 @@ class MainActivity : AppCompatActivity() {
             the_four_fundamental_arithmetic_operations_status = 2
             isDeleteOk = true
             isDot = false
+            isFirstPushed_equals_flag = true
             Log.d("debug", "accumulation : " + accumulation.toString())
         }
+
 
         //plus
         button_Function[6]!!.setOnClickListener {
@@ -160,7 +203,6 @@ class MainActivity : AppCompatActivity() {
 
             Log.d("debug", "accumulation : " + accumulation.toString())
         }
-
 
         // equal
         button_Function[7]!!.setOnClickListener {
@@ -179,34 +221,52 @@ class MainActivity : AppCompatActivity() {
 
                         Log.d("debug", "isfirstpush_equals_flag : false")
                     }
-                    isDeleteOk = false
-
-//                    Log.d("debug", "Click!")
                 }
 
                 2 -> {
-                    accumulation = (first_number - textview_showNumber.text.toString().toDouble())
-                    textview_showNumber.text = accumulation.toString()
-                    isDeleteOk = false
+                    if (isFirstPushed_equals_flag) {
+                        accumulation = first_number - sec_number
+
+                        Log.d("debug", "isfirstpush_equals_flag : true")
+                        isFirstPushed_equals_flag = false
+                    } else {
+                        accumulation += sec_number
+
+                        Log.d("debug", "isfirstpush_equals_flag : false")
+                    }
                 }
 
                 3 -> {
-                    accumulation = (first_number * textview_showNumber.text.toString().toDouble())
-                    textview_showNumber.text = accumulation.toString()
-                    isDeleteOk = false
+                    if (isFirstPushed_equals_flag) {
+                        accumulation = first_number * sec_number
+
+                        Log.d("debug", "isfirstpush_equals_flag : true")
+                        isFirstPushed_equals_flag = false
+                    } else {
+                        accumulation += sec_number
+
+                        Log.d("debug", "isfirstpush_equals_flag : false")
+                    }
                 }
 
                 4 -> {
-                    accumulation = (first_number / textview_showNumber.text.toString().toDouble())
-                    textview_showNumber.text = accumulation.toString()
-                    isDeleteOk = false
-                    // button_Function[3]!!.setBackgroundColor() // 색깔 변경 (안눌려 있는 상태)
+                    if (isFirstPushed_equals_flag) {
+                        accumulation = first_number / sec_number
+
+                        Log.d("debug", "isfirstpush_equals_flag : true")
+                        isFirstPushed_equals_flag = false
+                    } else {
+                        accumulation += sec_number
+
+                        Log.d("debug", "isfirstpush_equals_flag : false")
+                    }
                 }
             }
             Log.d("debug", "accumulation : " + accumulation.toString())
             Log.d("debug", "sec_number : " + sec_number.toString())
             Log.d("debug", "first_number : " + first_number.toString())
 
+            isDeleteOk = false
             textview_showNumber.text = accumulation.toString()
         }
 
@@ -219,14 +279,11 @@ class MainActivity : AppCompatActivity() {
                 accumulation = textview_showNumber.text.toString().toDouble()
                 isDot = true
             }
-
-
         }
-
     }
 
     private fun listener_negative_number() {
-        if (textview_showNumber.text == "0") { // 0일때
+        if (textview_showNumber.text == "0") {
             //아무 동작 안함
         } else { // 0이 아닐때
             if (textview_showNumber.text.substring(0, 1) == "-") { // 음수일때 양수로 변경하기
@@ -257,6 +314,4 @@ class MainActivity : AppCompatActivity() {
     private fun setAccumulation(number: String) {
         accumulation = number.toDouble()
     }
-
-
 }
