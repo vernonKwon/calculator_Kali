@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         height = displayMetrics.heightPixels
 
         val numberPadHeight = height / 10 * 6
-        val a: Int = displayMetrics.widthPixels / 6
+        val a = displayMetrics.widthPixels / 6
 
         numberpad.layoutParams = LinearLayout.LayoutParams(width, numberPadHeight)
 
@@ -91,12 +91,16 @@ class MainActivity : AppCompatActivity() {
             button_Number[i]!!.background = ContextCompat.getDrawable(this, R.drawable.numberpad)
             button_Number[i]!!.setTextColor(Color.WHITE)
 
+
         }
+        button_Number[0]!!.background = ContextCompat.getDrawable(this, R.drawable.zero_button)
         //button_Number[0]!!.background = ContextCompat.getDrawable(this, R.drawable.zero_button)
 
 
         for (i in 0 until resFunctionId.size) { // 9개
             button_Function[i] = findViewById(resFunctionId[i])
+            button_Function[i]!!.layoutParams.width = a
+            button_Function[i]!!.layoutParams.height = a
         }
 
         button_Function[8]!!.background = ContextCompat.getDrawable(this, R.drawable.numberpad)
@@ -267,7 +271,14 @@ class MainActivity : AppCompatActivity() {
             Log.d("debug", "first_number : " + first_number.toString())
 
             isDeleteOk = false
-            textview_showNumber.text = accumulation.toString()
+
+            if (accumulation % 1 == 0.0) {
+                textview_showNumber.text = accumulation.toString().replace(".0", "")
+            } else {
+                textview_showNumber.text = accumulation.toString()
+            }
+
+
         }
 
         button_Function[8]!!.setOnClickListener {
