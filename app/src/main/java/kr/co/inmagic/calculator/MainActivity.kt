@@ -13,7 +13,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     var the_four_fundamental_arithmetic_operations_status = 0 // 1 : plus, 2 : minus, 3 : multyply, 4 : division
-    var isDot = false
     var isDeleteOk = false
 
     var isFirstPushed_equals_flag = false
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity() {
 
         for (i in 0 until resNumberId.size) {
             button_Number[i] = findViewById(resNumberId[i])
-            button_Number[i]!!.background = resources.getDrawable(R.drawable.numberpad)
+            button_Number[i]!!.background = ContextCompat.getDrawable(this, R.drawable.numberpad)
 
             button_Number[i]!!.setOnClickListener {
 
@@ -66,19 +65,6 @@ class MainActivity : AppCompatActivity() {
                     textview_showNumber.text = (textview_showNumber.text.toString() + i)
                     sec_number = textview_showNumber.text.toString().toDouble()
                 }
-
-                /*when(selectOrder) {
-                    1 -> {
-                        selectOrder = 2
-                    }
-                    2 -> {
-
-                        selectOrder = 1
-                    }
-                }*/
-//                accumulation = textview_showNumber.text.toString().toDouble()
-
-                //Toast.makeText(applicationContext, i.toString(), Toast.LENGTH_SHORT).show()
 
                 Log.d("debug", "sec_number : " + sec_number.toString())
                 Log.d("debug", "textview_showNumber : " + textview_showNumber.text.toString())
@@ -117,7 +103,6 @@ class MainActivity : AppCompatActivity() {
         button_Function[0]!!.setOnClickListener {
             accumulation = 0.0
             textview_showNumber.text = "0"
-            isDot = false
             selectOrder = 1
             isFirstPushed_equals_flag = false
         }
@@ -137,7 +122,7 @@ class MainActivity : AppCompatActivity() {
 
         /**
          *
-        button_Function[index]
+        button_Function
         division : 3 - 4
         multyfly : 4 - 3
         minus : 5 - 2
@@ -146,7 +131,6 @@ class MainActivity : AppCompatActivity() {
 
         //사칙연산, 추후 사용
 /*
-
         for (i in 3..6) {
             Log.d("debug", "temp : " + temp.toString())
             button_Function[i]!!.setOnClickListener {
@@ -164,13 +148,12 @@ class MainActivity : AppCompatActivity() {
         }
 */
 
-
         //division
         button_Function[3]!!.setOnClickListener {
-            first_number = accumulation
+            first_number = sec_number
             the_four_fundamental_arithmetic_operations_status = 4
             isDeleteOk = true
-            isDot = false
+            //isDot = false
             isFirstPushed_equals_flag = true
 
             Log.d("debug", "accumulation : " + accumulation.toString())
@@ -178,20 +161,20 @@ class MainActivity : AppCompatActivity() {
 
         //multyfly
         button_Function[4]!!.setOnClickListener {
-            first_number = accumulation
+            first_number = sec_number
             the_four_fundamental_arithmetic_operations_status = 3
             isDeleteOk = true
-            isDot = false
+            //isDot = false
             isFirstPushed_equals_flag = true
             Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
         //minus
         button_Function[5]!!.setOnClickListener {
-            first_number = accumulation
+            first_number = sec_number
             the_four_fundamental_arithmetic_operations_status = 2
             isDeleteOk = true
-            isDot = false
+            //isDot = false
             isFirstPushed_equals_flag = true
             Log.d("debug", "accumulation : " + accumulation.toString())
         }
@@ -202,7 +185,7 @@ class MainActivity : AppCompatActivity() {
             first_number = sec_number
             the_four_fundamental_arithmetic_operations_status = 1
             isDeleteOk = true
-            isDot = false
+            //isDot = false
             isFirstPushed_equals_flag = true
 
             Log.d("debug", "accumulation : " + accumulation.toString())
@@ -234,8 +217,8 @@ class MainActivity : AppCompatActivity() {
                         Log.d("debug", "isfirstpush_equals_flag : true")
                         isFirstPushed_equals_flag = false
                     } else {
-                        accumulation += sec_number
-
+                        //accumulation -= sec_number
+                        accumulation -= sec_number
                         Log.d("debug", "isfirstpush_equals_flag : false")
                     }
                 }
@@ -247,7 +230,7 @@ class MainActivity : AppCompatActivity() {
                         Log.d("debug", "isfirstpush_equals_flag : true")
                         isFirstPushed_equals_flag = false
                     } else {
-                        accumulation += sec_number
+                        accumulation *= sec_number
 
                         Log.d("debug", "isfirstpush_equals_flag : false")
                     }
@@ -260,7 +243,7 @@ class MainActivity : AppCompatActivity() {
                         Log.d("debug", "isfirstpush_equals_flag : true")
                         isFirstPushed_equals_flag = false
                     } else {
-                        accumulation += sec_number
+                        accumulation /= sec_number
 
                         Log.d("debug", "isfirstpush_equals_flag : false")
                     }
@@ -272,7 +255,7 @@ class MainActivity : AppCompatActivity() {
 
             isDeleteOk = false
 
-            if (accumulation % 1 == 0.0) {
+            if (accumulation % 1 == 0.0) { // 소수점 뒤가 유효할때 대응해야함. 단순히 이 방식은 유효자리 숫자 뒤를 지우지 못함.
                 textview_showNumber.text = accumulation.toString().replace(".0", "")
             } else {
                 textview_showNumber.text = accumulation.toString()
@@ -283,12 +266,11 @@ class MainActivity : AppCompatActivity() {
 
         button_Function[8]!!.setOnClickListener {
 
-            if (isDot) { // .이 존재하지 않음
+            if (textview_showNumber.text.toString().contains(".")) { // .이 존재하지 않음
 
             } else { // .이 존재함 추후 소수점 이후 자리는 없애버리는 기능 추가 / 기존 아이폰엔 없음
-                textview_showNumber.text = (textview_showNumber.text.toString() + ".")
+                setShowNumber(textview_showNumber.text.toString() + ".")
                 accumulation = textview_showNumber.text.toString().toDouble()
-                isDot = true
             }
         }
     }
@@ -303,7 +285,6 @@ class MainActivity : AppCompatActivity() {
                 textview_showNumber.text = accumulation.toString()
                 println(accumulation.toString())
 
-                //accumulation = ("-" + textview_showNumber.text).toDouble()
             } else { // 양수일때 음수로 변경하기
                 setAccumulation("-" + textview_showNumber.text)
                 textview_showNumber.text = accumulation.toString()
@@ -324,5 +305,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun setAccumulation(number: String) {
         accumulation = number.toDouble()
+    }
+
+    private fun setShowNumber(string: String) {
+        textview_showNumber.text = string.trim()
     }
 }
