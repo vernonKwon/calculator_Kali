@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
 
         }
         button_Number[0]!!.background = ContextCompat.getDrawable(this, R.drawable.zero_button)
-        //button_Number[0]!!.background = ContextCompat.getDrawable(this, R.drawable.zero_button)
 
 
         for (i in 0 until resFunctionId.size) { // 9개
@@ -96,8 +95,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         for (i in 3 until 8) {
-            button_Function[i]!!.background = ContextCompat.getDrawable(this, R.drawable.four)
-        }
+            button_Function[i]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+        } // 사칙연산, = 버튼 색깔 변경
 
         // 값 초기화 ,AC
         button_Function[0]!!.setOnClickListener {
@@ -153,9 +152,8 @@ class MainActivity : AppCompatActivity() {
             first_number = sec_number
             the_four_fundamental_arithmetic_operations_status = 4
             isDeleteOk = true
-            //isDot = false
             isFirstPushed_equals_flag = true
-
+            setFunButtonColor()
             Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
@@ -164,8 +162,8 @@ class MainActivity : AppCompatActivity() {
             first_number = sec_number
             the_four_fundamental_arithmetic_operations_status = 3
             isDeleteOk = true
-            //isDot = false
             isFirstPushed_equals_flag = true
+            setFunButtonColor()
             Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
@@ -174,8 +172,8 @@ class MainActivity : AppCompatActivity() {
             first_number = sec_number
             the_four_fundamental_arithmetic_operations_status = 2
             isDeleteOk = true
-            //isDot = false
             isFirstPushed_equals_flag = true
+            setFunButtonColor()
             Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
@@ -185,9 +183,8 @@ class MainActivity : AppCompatActivity() {
             first_number = sec_number
             the_four_fundamental_arithmetic_operations_status = 1
             isDeleteOk = true
-            //isDot = false
             isFirstPushed_equals_flag = true
-
+            setFunButtonColor()
             Log.d("debug", "accumulation : " + accumulation.toString())
         }
 
@@ -309,5 +306,45 @@ class MainActivity : AppCompatActivity() {
 
     private fun setShowNumber(string: String) {
         textview_showNumber.text = string.trim()
+    }
+
+    private fun setFunButtonColor() { // 1 : plus, 2 : minus, 3 : multyply, 4 : division
+        when (the_four_fundamental_arithmetic_operations_status) {
+            1 -> {
+                button_Function[6]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_pushed_four)
+
+
+                button_Function[5]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+                button_Function[4]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+                button_Function[3]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+            }
+
+            2 -> {
+                button_Function[6]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+
+                button_Function[5]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_pushed_four)
+
+                button_Function[4]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+                button_Function[3]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+            }
+
+            3 -> {
+                button_Function[6]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+                button_Function[5]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+
+                button_Function[4]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_pushed_four)
+
+                button_Function[3]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+            }
+
+            4 -> {
+                button_Function[6]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+                button_Function[5]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+                button_Function[4]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_four)
+
+
+                button_Function[3]!!.background = ContextCompat.getDrawable(this, R.drawable.fun_pushed_four)
+            }
+        }
     }
 }
